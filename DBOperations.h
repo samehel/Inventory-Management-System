@@ -58,46 +58,23 @@ public:
 	}
 
 	void CreateItem(string& itemName, double unitPrice, int unitsInStock) {
-		PreparedStatement* pStmt1 = nullptr;
 		try {
-			pStmt1 = dbConnection.getConn()->prepareStatement("INSERT INTO Inventory(ItemName, UnitPrice, UnitsInStock) VALUES (?, ?, ?)");
+			pStmt = dbConnection.getConn()->prepareStatement("INSERT INTO Inventory(ItemName, UnitPrice, UnitsInStock) VALUES (?, ?, ?)");
 
-			pStmt1->setString(1, itemName);
-			pStmt1->setDouble(2, unitPrice);
-			pStmt1->setInt(3, unitsInStock);
+			pStmt->setString(1, itemName);
+			pStmt->setDouble(2, unitPrice);
+			pStmt->setInt(3, unitsInStock);
 
-			pStmt1->executeUpdate();
+			pStmt->executeUpdate();
 
 			cout << "Item successfully added to inventory" << endl;
 
 			delete pStmt;
-			pStmt = nullptr;
 		}
 		catch (SQLException& e) {
 			cerr << "An Error occured while attempting to add an item: " << e.what() << endl;
-			if (pStmt) {
-				delete pStmt;
-			}
 			throw;
 		}
-		catch (exception& e) {
-			cerr << "Standard Exception occurred: " << e.what() << endl;
-			if (pStmt) {
-				delete pStmt; 
-			}
-			throw;
-		}
-		catch (...) {
-			cerr << "An unknown error has occured" << endl;
-			if (pStmt) {
-				delete pStmt; 
-			}
-			throw;
-		}
-
-		if (pStmt1)
-			delete pStmt1;
-	
 	}
 
 	vector<InventoryItem> retrieveAllItems() {
