@@ -59,6 +59,8 @@ public:
 
 		pStmt->executeUpdate();
 
+		cout << "Item successfully added to inventory" << endl;
+
 		delete pStmt;
 	}
 
@@ -84,6 +86,56 @@ public:
 		return items;
 	}
 
+	InventoryItem retrieveItemByID(int ID) {
+		InventoryItem item;
+		PreparedStatement* pStmt = dbConnection.getConn()->prepareStatement("SELECT * FROM Inventory WHERE ItemID = ?");
+		pStmt->setInt(1, ID);
+
+		ResultSet* res = pStmt->executeQuery();
+
+		if (res->next()) {
+			item.itemID = res->getInt("ItemID");
+			item.itemName = res->getString("ItemName");
+			item.unitsInStock = res->getInt("UnitsInStock");
+			item.unitPrice = res->getDouble("UnitPrice");
+			item.lastUpdated = res->getString("LastUpdated");
+		}
+		else {
+			cout << "No Item found with ID: " << ID << endl;
+		}
+
+		delete res;
+		delete pStmt;
+
+		return item;
+	}
+
+	void UpdateItem(int ID, string& itemName, int unitsInStock, int unitPrice) {
+		PreparedStatement* pStmt = dbConnection.getConn()->prepareStatement("UPDATE Inventory SET ItemName = ?, UnitsInStock = ?, UnitPrice = ? WHERE ItemID = ?");
+		
+		pStmt->setString(1, itemName);
+		pStmt->setInt(2, unitsInStock);
+		pStmt->setInt(3, unitPrice);
+		pStmt->setInt(4, ID);
+
+		pStmt->executeUpdate();
+
+		cout << "Successfully updated item with ID: " << ID << endl;
+
+		delete pStmt;
+	}
+
+	void DeleteItem(int ID) {
+		PreparedStatement* pStmt = dbConnection.getConn()->prepareStatement("DELETE FROM Inventory WHERE ItemID = ?");
+
+		pStmt->setInt(1, ID);
+
+		pStmt->executeUpdate();
+
+		cout << "Successfull deleted item with ID: " << ID << endl;
+
+		delete pStmt;
+	}
 
 };
 
