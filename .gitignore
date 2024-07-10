@@ -362,3 +362,9 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /MySQL Connector Files
+
+# MySQL dlls
+libcrypto-3-x64.dll
+libssl-3-x64.dll
+mysqlcppconn-10-vs14.dll
+mysqlcppconnx-2-vs14.dll
