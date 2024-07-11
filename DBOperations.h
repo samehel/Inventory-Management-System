@@ -121,7 +121,9 @@ public:
 				item.lastUpdated = res->getString("LastUpdated");
 			}
 			else {
-				throw "No Item found with ID: " + ID;
+				return InventoryItem {
+					item.itemID = 0,
+				};
 			}
 
 			delete res;
@@ -135,13 +137,13 @@ public:
 		}
 	}
 
-	void UpdateItem(int ID, string& itemName, int unitsInStock, int unitPrice) {
+	void UpdateItem(int ID, string& itemName, double unitPrice, int unitsInStock) {
 		try {
 			pStmt = dbConnection.getConn()->prepareStatement("UPDATE Inventory SET ItemName = ?, UnitsInStock = ?, UnitPrice = ? WHERE ItemID = ?");
 
 			pStmt->setString(1, itemName);
 			pStmt->setInt(2, unitsInStock);
-			pStmt->setInt(3, unitPrice);
+			pStmt->setDouble(3, unitPrice);
 			pStmt->setInt(4, ID);
 
 			pStmt->executeUpdate();
@@ -164,7 +166,7 @@ public:
 
 			pStmt->executeUpdate();
 
-			cout << "Successfull deleted item with ID: " << ID << endl;
+			cout << "Successfully deleted item with ID: " << ID << endl;
 
 			delete pStmt;
 		}
